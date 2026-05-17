@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baby Berry — Management App</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --purple-light: #f0ebff;
+  --purple-mid: #c4b7f8;
+  --purple: #8b75e8;
+  --purple-dark: #5a4a8a;
+  --pink-light: #fce8f3;
+  --pink: #f0b8d8;
+  --pink-dark: #c4607a;
+  --green-light: #edfaf3;
+  --green: #7de0a8;
+  --green-dark: #1f7a48;
+  --red-light: #fff0f3;
+  --red: #f5a0b0;
+  --red-dark: #c0325a;
+  --amber-light: #fff8e6;
+  --amber: #ffd06b;
+  --amber-dark: #8a6000;
+  --text: #2d2058;
+  --text-muted: #9b8ec0;
+  --border: #e8e0f8;
+  --bg: #f5f0ff;
+  --card: #ffffff;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* ── HEADER ── */
+.app-header {
+  background: #fff;
+  border-bottom: 1.5px solid var(--border);
+  padding: 0 1.25rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0 0;
+}
+.header-logo { font-size: 26px; line-height: 1; }
+.header-text {}
+.header-title {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--purple-dark);
+  line-height: 1.15;
+}
+.header-sub {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.rainbow-bar {
+  height: 4px;
+  background: linear-gradient(90deg,#ffb3c6,#ffd6a5,#fffacd,#c3f0ca,#a8d8ea,#c4b7f8);
+  border-radius: 2px;
+  margin-top: 10px;
+}
+
+/* ── TABS ── */
+.tab-nav {
+  max-width: 700px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  padding-top: 2px;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 9px 4px 11px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  border-bottom: 2.5px solid transparent;
+  transition: color 0.18s, border-color 0.18s;
+  position: relative;
+}
+.tab-btn .tab-icon { font-size: 18px; line-height: 1; }
+.tab-btn.active { color: var(--purple); border-bottom-color: var(--purple); }
+.tab-btn:hover:not(.active) { color: var(--purple-dark); }
+
+/* ── MAIN ── */
+.app-main {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1.4rem 1.1rem 4rem;
+}
+
+/* ── TAB PANELS ── */
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── SECTION HEADING ── */
+.section-head {
+  margin-bottom: 1.2rem;
+}
+.section-title {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--purple-dark);
+}
+.section-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ── CARD ── */
+.bb-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  padding: 1.4rem;
+  box-shadow: 0 4px 24px rgba(140,110,200,0.07);
+}
+
+/* ── FORM ── */
+.field { margin-bottom: 1rem; }
+.field:last-child { margin-bottom: 0; }
+
+label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+input[type="tel"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  background: #faf8ff;
+  outline: none;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--purple-mid);
+  box-shadow: 0 0 0 3px rgba(180,155,232,0.16);
+  background: #fff;
+}
+input::placeholder, textarea::placeholder { color: #cec4f0; font-weight: 500; }
+textarea { min-height: 80px; resize: vertical; line-height: 1.5; }
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a89cc8' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+  cursor: pointer;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media(max-width:440px) { .field-row { grid-template-columns: 1fr; } }
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 1.2rem 0;
+}
+.divider-label {
+  text-align: center;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 1.1rem 0 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.divider-label::before, .divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── BUTTON ── */
+.bb-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: linear-gradient(135deg, var(--purple-mid) 0%, var(--pink) 100%);
+  color: #fff;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.2s, transform 0.15s;
+  margin-top: 1.1rem;
+}
+.bb-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+.bb-btn:active { transform: scale(0.98); }
+.bb-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.bb-btn.secondary {
+  background: none;
+  border: 1.5px solid var(--purple-mid);
+  color: var(--purple);
+  margin-top: 0;
+}
+.bb-btn.secondary:hover { background: var(--purple-light); }
+
+/* ── SPINNER ── */
+.spinner {
+  width: 16px; height: 16px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: none;
+}
+.bb-btn.loading .spinner { display: block; }
+.bb-btn.loading .btn-text { display: none; }
+.bb-btn.secondary .spinner { border-color: rgba(138,110,210,0.3); border-top-color: var(--purple); }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── ALERTS ── */
+.alert {
+  display: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-top: 1rem;
+  text-align: center;
+}
+.alert.show { display: block; }
+.alert-success {
+  background: var(--green-light);
+  border: 1.5px solid var(--green);
+  color: var(--green-dark);
+}
+.alert-error {
+  background: var(--red-light);
+  border: 1.5px solid var(--red);
+  color: var(--red-dark);
+}
+
+/* ── DASHBOARD ── */
+.dash-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 1.2rem;
+}
+.stat-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  text-align: center;
+}
+.stat-num {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--purple-dark);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.dash-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border);
+  background: var(--card);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead tr {
+  background: var(--purple-light);
+}
+th {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--purple);
+  white-space: nowrap;
+}
+td {
+  padding: 10px 12px;
+  border-top: 1px solid var(--border);
+  color: var(--text);
+  font-weight: 600;
+  vertical-align: middle;
+}
+tr:hover td { background: #faf8ff; }
+.badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.badge-ok { background: var(--green-light); color: var(--green-dark); }
+.badge-warn { background: var(--amber-light); color: var(--amber-dark); }
+.badge-over { background: var(--red-light); color: var(--red-dark); }
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+.empty-state .empty-icon { font-size: 36px; margin-bottom: 8px; }
+
+.refresh-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 10px;
+}
+.last-refresh {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* ── SCHEDULE / CALENDAR ── */
+:root {
+  --cal-regular:  #dbeafe;
+  --cal-regular-text: #1e40af;
+  --cal-makeup:   #ffedd5;
+  --cal-makeup-text: #9a3412;
+  --cal-special:  #ede9fe;
+  --cal-special-text: #5b21b6;
+  --cal-cancelled:#f3f4f6;
+  --cal-cancelled-text:#6b7280;
+}
+.cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.cal-month-label {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--purple-dark);
+}
+.cal-nav-btn {
+  background: var(--purple-light);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--purple);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 5px 13px;
+  transition: background 0.15s;
+}
+.cal-nav-btn:hover { background: var(--purple-mid); color: #fff; }
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.cal-dow {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 4px 0 6px;
+}
+.cal-cell {
+  min-height: 72px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px;
+  vertical-align: top;
+}
+.cal-cell.other-month { background: #faf8ff; opacity: 0.55; }
+.cal-cell.today { border-color: var(--purple-mid); border-width: 2px; }
+.cal-day-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+  line-height: 1;
+}
+.cal-cell.today .cal-day-num { color: var(--purple); }
+.cal-event {
+  border-radius: 5px;
+  padding: 2px 5px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  line-height: 1.3;
+  cursor: default;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cal-event.regular   { background: var(--cal-regular);  color: var(--cal-regular-text); }
+.cal-event.makeup    { background: var(--cal-makeup);   color: var(--cal-makeup-text); }
+.cal-event.special   { background: var(--cal-special);  color: var(--cal-special-text); }
+.cal-event.cancelled { background: var(--cal-cancelled);color: var(--cal-cancelled-text); text-decoration: line-through; }
+.cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.cal-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.cal-legend-dot {
+  width: 11px; height: 11px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.cal-loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+@media(max-width:480px) {
+  .cal-cell { min-height: 54px; padding: 3px; }
+  .cal-event { font-size: 9px; padding: 1px 3px; }
+}
+  text-align: center;
+  padding: 1rem;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--purple-mid);
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="header-inner">
+    <div class="header-logo">🍓</div>
+    <div class="header-text">
+      <div class="header-title">Baby Berry</div>
+      <div class="header-sub">Enhancement School · TK Admin</div>
+    </div>
+  </div>
+  <div class="rainbow-bar"></div>
+
+  <!-- TAB NAV -->
+  <nav class="tab-nav" role="tablist">
+    <button class="tab-btn active" role="tab" aria-selected="true" data-tab="log" id="tab-log">
+      <span class="tab-icon">📋</span>Log Class
+    </button>
+    <button class="tab-btn" role="tab" data-tab="student" id="tab-student">
+      <span class="tab-icon">🌟</span>New Student
+    </button>
+    <button class="tab-btn" role="tab" data-tab="course" id="tab-course">
+      <span class="tab-icon">📚</span>New Course
+    </button>
+    <button class="tab-btn" role="tab" data-tab="dashboard" id="tab-dashboard">
+      <span class="tab-icon">📊</span>Dashboard
+    </button>
+    <button class="tab-btn" role="tab" data-tab="schedule" id="tab-schedule">
+      <span class="tab-icon">🗓️</span>Schedule
+    </button>
+  </nav>
+</div>
+
+<!-- MAIN -->
+<main class="app-main">
+
+  <!-- ═══════════════════════════════════════
+       TAB 1 — LOG A CLASS
+  ═══════════════════════════════════════ -->
+  <section class="tab-panel active" id="panel-log">
+    <div class="section-head">
+      <div class="section-title">Log a Class 📋</div>
+      <div class="section-sub">Record today's session and update the student's hours</div>
+    </div>
+    <div class="bb-card">
+      <div class="field">
+        <label>Member Code</label>
+        <input type="text" id="log-code" placeholder="BB-0159" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="log-date">
+        </div>
+        <div class="field">
+          <label>Hours Used</label>
+          <input type="number" id="log-hours" placeholder="1" min="0.5" max="8" step="0.5">
+        </div>
+      </div>
+      <div class="field">
+        <label>Activities Done</label>
+        <input type="text" id="log-activities" placeholder="e.g. animal toys, flashcard games, songs">
+      </div>
+      <div class="field">
+        <label>Notes</label>
+        <textarea id="log-notes" placeholder="Sweet moments, things to practise at home, observations..."></textarea>
+      </div>
+
+      <button class="bb-btn" id="btn-log">
+        <div class="spinner"></div>
+        <span class="btn-text">✉️ &nbsp;Send Class Log</span>
+      </button>
+      <div class="alert alert-success" id="alert-log-ok"></div>
+      <div class="alert alert-error" id="alert-log-err"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TAB 2 — NEW STUDENT
+  ═══════════════════════════════════════ -->
+  <section class="tab-panel" id="panel-student">
+    <div class="section-head">
+      <div class="section-title">New Student 🌟</div>
+      <div class="section-sub">Register a new student and create their profile</div>
+    </div>
+    <div class="bb-card">
+
+      <div class="divider-label">👤 Learner Info</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Member Code</label>
+          <input type="text" id="ns-code" placeholder="BB-0160" spellcheck="false">
+        </div>
+        <div class="field">
+          <label>Nickname</label>
+          <input type="text" id="ns-nickname" placeholder="Bunlhung">
+        </div>
+      </div>
+      <div class="field">
+        <label>Full Name (Thai)</label>
+        <input type="text" id="ns-name-th" placeholder="บัลลังก์ เจรจาศิลป์">
+      </div>
+      <div class="field">
+        <label>Full Name (English)</label>
+        <input type="text" id="ns-name-en" placeholder="Bunlhung Jerajasil">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Date of Birth</label>
+          <input type="date" id="ns-dob">
+        </div>
+        <div class="field">
+          <label>Age</label>
+          <input type="number" id="ns-age" placeholder="2" min="1" max="15">
+        </div>
+      </div>
+
+      <div class="divider-label">👨‍👩‍👧 Parent Info</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Father Name</label>
+          <input type="text" id="ns-dad-name" placeholder="ธนพร เจรจาศิลป์">
+        </div>
+        <div class="field">
+          <label>Father Phone</label>
+          <input type="tel" id="ns-dad-phone" placeholder="083-358-5355">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Mother Name</label>
+          <input type="text" id="ns-mom-name" placeholder="วรางค์รัตน์ บุตรวงศ์นรา">
+        </div>
+        <div class="field">
+          <label>Mother Phone</label>
+          <input type="tel" id="ns-mom-phone" placeholder="063-982-3555">
+        </div>
+      </div>
+
+      <div class="divider-label">🏥 Health & Media</div>
+
+      <div class="field">
+        <label>Allergies</label>
+        <input type="text" id="ns-allergies" placeholder="None / details here">
+      </div>
+      <div class="field">
+        <label>Medical Conditions</label>
+        <input type="text" id="ns-medical" placeholder="None / details here">
+      </div>
+      <div class="field">
+        <label>Media Permission</label>
+        <select id="ns-media">
+          <option value="Full Permission">Full Permission — all channels</option>
+          <option value="Internal Only">Internal Only — school materials only</option>
+          <option value="No Permission">No Permission</option>
+        </select>
+      </div>
+
+      <div class="divider-label">📚 Course</div>
+
+      <div class="field-row">
+        <div class="field">
+          <label>Course Hours</label>
+          <select id="ns-course">
+            <option value="10">10 hours</option>
+            <option value="20">20 hours</option>
+            <option value="40">40 hours</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Start Date</label>
+          <input type="date" id="ns-start">
+        </div>
+      </div>
+
+      <button class="bb-btn" id="btn-student">
+        <div class="spinner"></div>
+        <span class="btn-text">🌟 &nbsp;Register New Student</span>
+      </button>
+      <div class="alert alert-success" id="alert-student-ok"></div>
+      <div class="alert alert-error" id="alert-student-err"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TAB 3 — NEW COURSE
+  ═══════════════════════════════════════ -->
+  <section class="tab-panel" id="panel-course">
+    <div class="section-head">
+      <div class="section-title">New Course 📚</div>
+      <div class="section-sub">Add a new course package to an existing student</div>
+    </div>
+    <div class="bb-card">
+      <div class="field">
+        <label>Member Code</label>
+        <input type="text" id="nc-code" placeholder="BB-0159" spellcheck="false">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Course Hours</label>
+          <select id="nc-hours">
+            <option value="10">10 hours</option>
+            <option value="20">20 hours</option>
+            <option value="40">40 hours</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Start Date</label>
+          <input type="date" id="nc-start">
+        </div>
+      </div>
+
+      <button class="bb-btn" id="btn-course">
+        <div class="spinner"></div>
+        <span class="btn-text">📚 &nbsp;Add New Course</span>
+      </button>
+      <div class="alert alert-success" id="alert-course-ok"></div>
+      <div class="alert alert-error" id="alert-course-err"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TAB 4 — DASHBOARD
+  ═══════════════════════════════════════ -->
+  <section class="tab-panel" id="panel-dashboard">
+    <div class="refresh-row">
+      <div>
+        <div class="section-title">Dashboard 📊</div>
+        <div class="last-refresh" id="last-refresh">Not yet loaded</div>
+      </div>
+      <button class="bb-btn secondary" style="width:auto;padding:9px 18px" id="btn-refresh">
+        <div class="spinner"></div>
+        <span class="btn-text">🔄 Refresh</span>
+      </button>
+    </div>
+
+    <!-- stat cards populated by JS -->
+    <div class="dash-stats" id="dash-stats">
+      <div class="stat-card"><div class="stat-num" id="stat-total">—</div><div class="stat-label">Active Students</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-warn">—</div><div class="stat-label">⚠️ Warning</div></div>
+      <div class="stat-card"><div class="stat-num" id="stat-over">—</div><div class="stat-label">🔴 Overtime</div></div>
+    </div>
+
+    <div id="dash-content">
+      <div class="empty-state">
+        <div class="empty-icon">📊</div>
+        Tap Refresh to load the latest student data
+      </div>
+    </div>
+
+    <div class="alert alert-error" id="alert-dash-err"></div>
+  </section>
+
+  <!-- ═══════════════════════════════════════
+       TAB 5 — SCHEDULE
+  ═══════════════════════════════════════ -->
+  <section class="tab-panel" id="panel-schedule">
+
+    <!-- SECTION 1 — Add Schedule -->
+    <div class="section-head">
+      <div class="section-title">Add Schedule 🗓️</div>
+      <div class="section-sub">Book a class slot for a student</div>
+    </div>
+    <div class="bb-card" style="margin-bottom:1.4rem">
+      <div class="field-row">
+        <div class="field">
+          <label>Member Code</label>
+          <input type="text" id="sch-code" placeholder="BB-0159" spellcheck="false">
+        </div>
+        <div class="field">
+          <label>Nickname</label>
+          <input type="text" id="sch-nickname" placeholder="Bunlhung">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Date</label>
+          <input type="date" id="sch-date">
+        </div>
+        <div class="field">
+          <label>Time</label>
+          <input type="time" id="sch-time">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Duration</label>
+          <select id="sch-duration">
+            <option value="1">1 hour</option>
+            <option value="1.5">1.5 hours</option>
+            <option value="2">2 hours</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Type</label>
+          <select id="sch-type">
+            <option value="Regular">Regular</option>
+            <option value="Make-up">Make-up</option>
+            <option value="Special">Special</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label>Notes</label>
+        <textarea id="sch-notes" placeholder="Any notes about this session..." style="min-height:60px"></textarea>
+      </div>
+      <button class="bb-btn" id="btn-schedule">
+        <div class="spinner"></div>
+        <span class="btn-text">🗓️ &nbsp;Add to Schedule</span>
+      </button>
+      <div class="alert alert-success" id="alert-sch-ok"></div>
+      <div class="alert alert-error"   id="alert-sch-err"></div>
+    </div>
+
+    <!-- SECTION 2 — Calendar -->
+    <div class="section-head">
+      <div class="section-title">Teacher Calendar 📅</div>
+      <div class="section-sub">Monthly view of all scheduled classes</div>
+    </div>
+
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--cal-regular)"></div>Regular</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--cal-makeup)"></div>Make-up</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--cal-special)"></div>Special</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--cal-cancelled)"></div>Cancelled</div>
+    </div>
+
+    <div class="bb-card">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" id="btn-cal-prev">◀</button>
+        <div class="cal-month-label" id="cal-month-label">—</div>
+        <button class="cal-nav-btn" id="btn-cal-next">▶</button>
+      </div>
+      <div class="cal-grid" id="cal-dow-row">
+        <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div>
+        <div class="cal-dow">Tue</div><div class="cal-dow">Wed</div>
+        <div class="cal-dow">Thu</div><div class="cal-dow">Fri</div>
+        <div class="cal-dow">Sat</div>
+      </div>
+      <div class="cal-grid" id="cal-body">
+        <div class="cal-loading">Loading calendar…</div>
+      </div>
+    </div>
+    <div class="alert alert-error" id="alert-cal-err" style="margin-top:0.8rem"></div>
+
+  </section>
+
+</main>
+
+<div class="app-footer">🍓 Baby Berry Enhancement School &nbsp;·&nbsp; โรงเรียนเสริมทักษะเบบี้เบอร์รี่</div>
+
+<script>
+const API_URL  = 'https://script.google.com/macros/s/AKfycbzCOhCw4wpGs2HswUeGcm6i-QCiXH_AhcY60kP2-5KKYXZSUkwEOVaVL_mgX2CJGpeS/exec';
+const API_KEY  = 'BabyBerry2026TK';
+const TODAY    = new Date().toISOString().split('T')[0];
+
+/* ── Calendar state — declared early so switchTab can reference calEvents ── */
+let calYear   = new Date().getFullYear();
+let calMonth  = new Date().getMonth(); /* 0-based */
+let calEvents = [];
+
+/* ── Set today defaults ── */
+['log-date','ns-start','nc-start'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.value = TODAY;
+});
+
+/* ── Tab switching ── */
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('active');
+    b.setAttribute('aria-selected','false');
+  });
+  document.getElementById('panel-' + name).classList.add('active');
+  const btn = document.getElementById('tab-' + name);
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected','true');
+  if (name === 'schedule' && calEvents.length === 0) renderCalendar();
+}
+
+/* ── Generic POST (no-cors for write actions) ── */
+async function postNoCors(payload, btnId, okId, errId, successMsg) {
+  const btn = document.getElementById(btnId);
+  const okEl  = document.getElementById(okId);
+  const errEl = document.getElementById(errId);
+  okEl.classList.remove('show');
+  errEl.classList.remove('show');
+
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  try {
+    await fetch(API_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ api_key: API_KEY, ...payload })
+    });
+    okEl.textContent = successMsg;
+    okEl.classList.add('show');
+  } catch(e) {
+    errEl.textContent = '⚠️ Network error — check your connection and try again.';
+    errEl.classList.add('show');
+  }
+  btn.classList.remove('loading');
+  btn.disabled = false;
+}
+
+/* ── Generic POST with cors (for dashboard read) ── */
+async function postWithResponse(payload) {
+  const res = await fetch(API_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ api_key: API_KEY, ...payload })
+  });
+  return res.json();
+}
+
+/* ── Validate helper ── */
+function validate(fields) {
+  for (const [id, label] of fields) {
+    const el = document.getElementById(id);
+    if (!el || !el.value.trim()) {
+      return label + ' is required.';
+    }
+  }
+  return null;
+}
+
+/* ══════════════════════════════
+   TAB 1 — LOG A CLASS
+══════════════════════════════ */
+async function submitLog() {
+  const err = validate([
+    ['log-code','Member code'], ['log-date','Date'],
+    ['log-hours','Hours used'], ['log-activities','Activities done']
+  ]);
+  if (err) {
+    const el = document.getElementById('alert-log-err');
+    el.textContent = '⚠️ ' + err; el.classList.add('show');
+    return;
+  }
+  const code     = document.getElementById('log-code').value.trim();
+  const date     = document.getElementById('log-date').value;
+  const hours    = parseFloat(document.getElementById('log-hours').value);
+  const acts     = document.getElementById('log-activities').value.trim();
+  const notes    = document.getElementById('log-notes').value.trim();
+
+  await postNoCors(
+    { action:'log_class', member_code:code, date, hours, activities:acts, notes },
+    'btn-log', 'alert-log-ok', 'alert-log-err',
+    '✅ Class logged for ' + code + ' — ' + hours + ' hr' + (hours===1?'':'s') + ' on ' + date
+  );
+
+  document.getElementById('log-code').value       = '';
+  document.getElementById('log-hours').value      = '';
+  document.getElementById('log-activities').value = '';
+  document.getElementById('log-notes').value      = '';
+  document.getElementById('log-date').value       = TODAY;
+}
+
+/* ══════════════════════════════
+   TAB 2 — NEW STUDENT
+══════════════════════════════ */
+async function submitStudent() {
+  const err = validate([
+    ['ns-code','Member code'], ['ns-nickname','Nickname'],
+    ['ns-name-th','Full name (Thai)'], ['ns-name-en','Full name (English)'],
+    ['ns-dob','Date of birth'], ['ns-age','Age'],
+    ['ns-start','Start date']
+  ]);
+  if (err) {
+    const el = document.getElementById('alert-student-err');
+    el.textContent = '⚠️ ' + err; el.classList.add('show');
+    return;
+  }
+  const payload = {
+    action:        'new_student',
+    member_code:   document.getElementById('ns-code').value.trim(),
+    nickname:      document.getElementById('ns-nickname').value.trim(),
+    full_name_th:  document.getElementById('ns-name-th').value.trim(),
+    full_name_en:  document.getElementById('ns-name-en').value.trim(),
+    dob:           document.getElementById('ns-dob').value,
+    age:           parseInt(document.getElementById('ns-age').value),
+    father_name:   document.getElementById('ns-dad-name').value.trim(),
+    father_phone:  document.getElementById('ns-dad-phone').value.trim(),
+    mother_name:   document.getElementById('ns-mom-name').value.trim(),
+    mother_phone:  document.getElementById('ns-mom-phone').value.trim(),
+    allergies:     document.getElementById('ns-allergies').value.trim() || 'None',
+    medical:       document.getElementById('ns-medical').value.trim() || 'None',
+    media_permission: document.getElementById('ns-media').value,
+    course_hours:  parseInt(document.getElementById('ns-course').value),
+    start_date:    document.getElementById('ns-start').value
+  };
+
+  await postNoCors(
+    payload, 'btn-student', 'alert-student-ok', 'alert-student-err',
+    '✅ Student ' + payload.nickname + ' (' + payload.member_code + ') registered successfully!'
+  );
+}
+
+/* ══════════════════════════════
+   TAB 3 — NEW COURSE
+══════════════════════════════ */
+async function submitCourse() {
+  const err = validate([
+    ['nc-code','Member code'], ['nc-start','Start date']
+  ]);
+  if (err) {
+    const el = document.getElementById('alert-course-err');
+    el.textContent = '⚠️ ' + err; el.classList.add('show');
+    return;
+  }
+  const code  = document.getElementById('nc-code').value.trim();
+  const hours = parseInt(document.getElementById('nc-hours').value);
+  const start = document.getElementById('nc-start').value;
+
+  await postNoCors(
+    { action:'new_course', member_code:code, course_hours:hours, start_date:start },
+    'btn-course', 'alert-course-ok', 'alert-course-err',
+    '✅ ' + hours + '-hour course added for ' + code + ' starting ' + start
+  );
+
+  document.getElementById('nc-code').value  = '';
+  document.getElementById('nc-start').value = TODAY;
+}
+
+/* ══════════════════════════════
+   TAB 4 — DASHBOARD (Google Sheets gviz)
+   Columns: A=Member Code  B=Nickname  C=Course
+            D=Hours Purchased  E=Hours Used
+            F=Hours Remaining  G=Warning Status
+══════════════════════════════ */
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1rYiV5Exf2o5pB_tva57acegi5Jx_ancRmW7EGPSFffo/gviz/tq?tqx=out:json&sheet=Dashboard';
+
+function cellVal(cell) {
+  /* gviz cells: {v: value, f: formatted} — return formatted string if present, else raw value */
+  if (!cell || cell.v === null || cell.v === undefined) return '—';
+  return (cell.f !== undefined && cell.f !== null) ? String(cell.f) : String(cell.v);
+}
+
+function cellNum(cell) {
+  if (!cell || cell.v === null || cell.v === undefined) return NaN;
+  return parseFloat(cell.v);
+}
+
+async function loadDashboard() {
+  const btn    = document.getElementById('btn-refresh');
+  const errEl  = document.getElementById('alert-dash-err');
+  const content= document.getElementById('dash-content');
+  errEl.classList.remove('show');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  /* ── STEP 1 — Trigger Apps Script to refresh sheet data (no-cors, fire-and-forget) ── */
+  try {
+    await fetch(API_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ api_key: API_KEY, action: 'get_dashboard' })
+    });
+  } catch(e) { /* silent — no-cors response is always opaque */ }
+
+  /* ── STEP 2 — Wait 3 seconds for Apps Script to write to the sheet ── */
+  document.getElementById('last-refresh').textContent = 'Syncing data…';
+  await new Promise(resolve => setTimeout(resolve, 3000));
+
+  /* ── STEP 3 — Fetch fresh data from Google Sheets gviz ── */
+  try {
+    const res = await fetch(SHEET_URL + '&t=' + Date.now()); /* cache-bust timestamp */
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+    /* Strip Google's JSONP wrapper:
+       google.visualization.Query.setResponse({...});  */
+    const raw  = await res.text();
+    const json = raw
+      .replace(/^[^(]+\(/, '')   /* remove everything up to and including first ( */
+      .replace(/\);?\s*$/, '');  /* remove trailing ); */
+
+    const parsed = JSON.parse(json);
+    const dataRows = (parsed.table && parsed.table.rows) ? parsed.table.rows : [];
+
+    /* Map each row to a plain object using column index */
+    const rows = dataRows
+      .filter(r => r.c && r.c[0] && r.c[0].v)   /* skip blank/header rows */
+      .map(r => {
+        const c = r.c;
+        return {
+          code:      cellVal(c[0]),
+          nickname:  cellVal(c[1]),
+          course:    cellVal(c[2]),
+          purchased: cellVal(c[3]),
+          used:      cellVal(c[4]),
+          remRaw:    cellNum(c[5]),
+          remDisp:   cellVal(c[5]),
+          status:    cellVal(c[6])
+        };
+      });
+
+    /* Sort by hours remaining ascending — lowest first */
+    rows.sort((a, b) => {
+      const ra = isNaN(a.remRaw) ? 9999 : a.remRaw;
+      const rb = isNaN(b.remRaw) ? 9999 : b.remRaw;
+      return ra - rb;
+    });
+
+    /* Stat cards */
+    const total = rows.length;
+    const warns = rows.filter(r => !isNaN(r.remRaw) && r.remRaw <= 3 && r.remRaw > 0).length;
+    const overs = rows.filter(r => !isNaN(r.remRaw) && r.remRaw <= 0).length;
+
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-warn').textContent  = warns;
+    document.getElementById('stat-over').textContent  = overs;
+
+    if (rows.length === 0) {
+      content.innerHTML = `<div class="empty-state"><div class="empty-icon">🌟</div>No data found in Dashboard sheet</div>`;
+    } else {
+      let html = `<div class="dash-table-wrap"><table>
+        <thead><tr>
+          <th>Code</th>
+          <th>Nickname</th>
+          <th>Course</th>
+          <th>Purchased</th>
+          <th>Used</th>
+          <th>Remaining</th>
+          <th>Status</th>
+        </tr></thead><tbody>`;
+
+      rows.forEach(r => {
+        /* Badge derived from numeric hours remaining — overrides sheet status col */
+        let badgeClass, badgeText;
+        if (isNaN(r.remRaw))      { badgeClass = 'badge-ok';   badgeText = r.status; }
+        else if (r.remRaw <= 0)   { badgeClass = 'badge-over'; badgeText = '🔴 Overtime'; }
+        else if (r.remRaw <= 3)   { badgeClass = 'badge-warn'; badgeText = '⚠️ Warning'; }
+        else                      { badgeClass = 'badge-ok';   badgeText = '✅ OK'; }
+
+        html += `<tr>
+          <td><strong>${r.code}</strong></td>
+          <td>${r.nickname}</td>
+          <td>${r.course}</td>
+          <td style="text-align:center">${r.purchased} hr</td>
+          <td style="text-align:center">${r.used} hr</td>
+          <td style="text-align:center"><strong>${r.remDisp} hr</strong></td>
+          <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+        </tr>`;
+      });
+
+      html += '</tbody></table></div>';
+      content.innerHTML = html;
+    }
+
+    document.getElementById('last-refresh').textContent =
+      'Last updated: ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+  } catch(e) {
+    errEl.textContent = '⚠️ Could not load sheet — ' + (e.message || 'check your connection and try again.');
+    errEl.classList.add('show');
+    content.innerHTML = `<div class="empty-state"><div class="empty-icon">📡</div>Connection error — tap Refresh to retry</div>`;
+  }
+
+  btn.classList.remove('loading');
+  btn.disabled = false;
+}
+/* ══════════════════════════════
+   TAB 5 — SCHEDULE
+══════════════════════════════ */
+
+/* Set today default for schedule date */
+const schDateEl = document.getElementById('sch-date');
+if (schDateEl) schDateEl.value = TODAY;
+
+/* ── Submit new schedule entry ── */
+async function submitSchedule() {
+  const errEl = document.getElementById('alert-sch-err');
+  const err = validate([
+    ['sch-code','Member code'], ['sch-nickname','Nickname'],
+    ['sch-date','Date'], ['sch-time','Time']
+  ]);
+  if (err) {
+    errEl.textContent = '⚠️ ' + err;
+    errEl.classList.add('show');
+    return;
+  }
+
+  const payload = {
+    action:      'add_schedule',
+    member_code: document.getElementById('sch-code').value.trim(),
+    nickname:    document.getElementById('sch-nickname').value.trim(),
+    date:        document.getElementById('sch-date').value,
+    time:        document.getElementById('sch-time').value,
+    duration:    parseFloat(document.getElementById('sch-duration').value),
+    type:        document.getElementById('sch-type').value,
+    notes:       document.getElementById('sch-notes').value.trim()
+  };
+
+  await postNoCors(
+    payload, 'btn-schedule', 'alert-sch-ok', 'alert-sch-err',
+    '✅ Scheduled ' + payload.nickname + ' on ' + payload.date + ' at ' + payload.time
+  );
+
+  /* Refresh calendar after adding */
+  renderCalendar();
+}
+
+/* ══════════════════════════════
+   CALENDAR ENGINE
+══════════════════════════════ */
+
+const MONTHS = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+
+function calPrev() {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+function calNext() {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+async function fetchCalendarEvents() {
+  /* Try Apps Script GET first */
+  try {
+    const url = API_URL + '?action=get_teacher_calendar&api_key=' + encodeURIComponent(API_KEY);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    /* Accept array or {events:[]} wrapper */
+    return Array.isArray(data) ? data : (data.events || data.data || []);
+  } catch(e) {
+    /* Fallback: try gviz from Schedule sheet */
+    try {
+      const sheetUrl = 'https://docs.google.com/spreadsheets/d/1rYiV5Exf2o5pB_tva57acegi5Jx_ancRmW7EGPSFffo/gviz/tq?tqx=out:json&sheet=Schedule&t=' + Date.now();
+      const res = await fetch(sheetUrl);
+      if (!res.ok) throw new Error();
+      const raw  = await res.text();
+      const json = raw.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, '');
+      const parsed = JSON.parse(json);
+      const rows = (parsed.table && parsed.table.rows) ? parsed.table.rows : [];
+      /* Columns assumed: A=Date  B=MemberCode  C=Nickname  D=Time  E=Duration  F=Type  G=Notes */
+      return rows
+        .filter(r => r.c && r.c[0] && r.c[0].v)
+        .map(r => {
+          const c = r.c;
+          const rawDate = c[0] ? cellVal(c[0]) : '';
+          return {
+            date:     rawDate,
+            member_code: cellVal(c[1]),
+            nickname: cellVal(c[2]),
+            time:     cellVal(c[3]),
+            duration: cellVal(c[4]),
+            type:     cellVal(c[5]),
+            notes:    cellVal(c[6])
+          };
+        });
+    } catch(e2) {
+      return [];
+    }
+  }
+}
+
+function typeClass(type) {
+  if (!type) return 'regular';
+  const t = type.toLowerCase();
+  if (t.includes('make') || t.includes('makeup')) return 'makeup';
+  if (t.includes('special'))  return 'special';
+  if (t.includes('cancel'))   return 'cancelled';
+  return 'regular';
+}
+
+async function renderCalendar() {
+  const body    = document.getElementById('cal-body');
+  const errEl   = document.getElementById('alert-cal-err');
+  const label   = document.getElementById('cal-month-label');
+  errEl.classList.remove('show');
+
+  label.textContent = MONTHS[calMonth] + ' ' + calYear;
+  body.innerHTML = '<div class="cal-loading" style="grid-column:1/-1">Loading…</div>';
+
+  calEvents = await fetchCalendarEvents();
+
+  /* Build calendar grid */
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); /* 0=Sun */
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+  const todayStr = TODAY;
+
+  let cells = '';
+  let cellCount = 0;
+
+  /* Leading cells from previous month */
+  for (let i = firstDay - 1; i >= 0; i--) {
+    const d = daysInPrev - i;
+    cells += `<div class="cal-cell other-month"><div class="cal-day-num">${d}</div></div>`;
+    cellCount++;
+  }
+
+  /* Current month cells */
+  for (let d = 1; d <= daysInMonth; d++) {
+    const mm   = String(calMonth + 1).padStart(2, '0');
+    const dd   = String(d).padStart(2, '0');
+    const dateStr = calYear + '-' + mm + '-' + dd;
+    const isToday = dateStr === todayStr;
+
+    /* Find events on this day */
+    const dayEvents = calEvents.filter(ev => {
+      /* Normalise date — accept YYYY-MM-DD or DD/MM/YYYY */
+      let evDate = (ev.date || '').trim();
+      if (/^\d{2}\/\d{2}\/\d{4}$/.test(evDate)) {
+        const parts = evDate.split('/');
+        evDate = parts[2] + '-' + parts[1] + '-' + parts[0];
+      }
+      return evDate === dateStr;
+    });
+
+    let evHtml = '';
+    dayEvents.forEach(ev => {
+      const cls   = typeClass(ev.type);
+      const label = (ev.time ? ev.time.substring(0,5) + ' ' : '') + (ev.nickname || ev.member_code || '');
+      evHtml += `<div class="cal-event ${cls}" title="${ev.nickname||''} · ${ev.type||''} · ${ev.notes||''}">${label}</div>`;
+    });
+
+    cells += `<div class="cal-cell${isToday ? ' today' : ''}">
+      <div class="cal-day-num">${d}</div>
+      ${evHtml}
+    </div>`;
+    cellCount++;
+  }
+
+  /* Trailing cells to complete the last row */
+  const remaining = cellCount % 7 === 0 ? 0 : 7 - (cellCount % 7);
+  for (let d = 1; d <= remaining; d++) {
+    cells += `<div class="cal-cell other-month"><div class="cal-day-num">${d}</div></div>`;
+  }
+
+  body.innerHTML = cells;
+}
+
+/* ══════════════════════════════
+   EVENT LISTENERS — no onclick attributes
+   Works inside Google Sites iframe sandbox
+══════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* ── Tab buttons — use data-tab attribute ── */
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      switchTab(btn.getAttribute('data-tab'));
+    });
+  });
+
+  /* ── Form submit buttons ── */
+  var btnLog = document.getElementById('btn-log');
+  if (btnLog) btnLog.addEventListener('click', submitLog);
+
+  var btnStudent = document.getElementById('btn-student');
+  if (btnStudent) btnStudent.addEventListener('click', submitStudent);
+
+  var btnCourse = document.getElementById('btn-course');
+  if (btnCourse) btnCourse.addEventListener('click', submitCourse);
+
+  var btnRefresh = document.getElementById('btn-refresh');
+  if (btnRefresh) btnRefresh.addEventListener('click', loadDashboard);
+
+  var btnSchedule = document.getElementById('btn-schedule');
+  if (btnSchedule) btnSchedule.addEventListener('click', submitSchedule);
+
+  /* ── Calendar nav ── */
+  var btnPrev = document.getElementById('btn-cal-prev');
+  if (btnPrev) btnPrev.addEventListener('click', calPrev);
+
+  var btnNext = document.getElementById('btn-cal-next');
+  if (btnNext) btnNext.addEventListener('click', calNext);
+
+  /* ── Keyboard shortcut: Cmd/Ctrl+Enter submits active form ── */
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      var active = document.querySelector('.tab-panel.active');
+      if (!active) return;
+      var id = active.id;
+      if (id === 'panel-log')      submitLog();
+      else if (id === 'panel-student') submitStudent();
+      else if (id === 'panel-course')  submitCourse();
+      else if (id === 'panel-schedule') submitSchedule();
+    }
+  });
+
+  /* ── Init calendar label ── */
+  var calLabel = document.getElementById('cal-month-label');
+  if (calLabel) calLabel.textContent = MONTHS[calMonth] + ' ' + calYear;
+
+});
+
+</body>
+</html>
