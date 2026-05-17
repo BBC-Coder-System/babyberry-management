@@ -529,19 +529,19 @@ tr:hover td { background: #faf8ff; }
 
   <!-- TAB NAV -->
   <nav class="tab-nav" role="tablist">
-    <button class="tab-btn active" role="tab" aria-selected="true" data-tab="log" id="tab-log">
+    <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('log')" id="tab-log">
       <span class="tab-icon">📋</span>Log Class
     </button>
-    <button class="tab-btn" role="tab" data-tab="student" id="tab-student">
+    <button class="tab-btn" role="tab" onclick="switchTab('student')" id="tab-student">
       <span class="tab-icon">🌟</span>New Student
     </button>
-    <button class="tab-btn" role="tab" data-tab="course" id="tab-course">
+    <button class="tab-btn" role="tab" onclick="switchTab('course')" id="tab-course">
       <span class="tab-icon">📚</span>New Course
     </button>
-    <button class="tab-btn" role="tab" data-tab="dashboard" id="tab-dashboard">
+    <button class="tab-btn" role="tab" onclick="switchTab('dashboard')" id="tab-dashboard">
       <span class="tab-icon">📊</span>Dashboard
     </button>
-    <button class="tab-btn" role="tab" data-tab="schedule" id="tab-schedule">
+    <button class="tab-btn" role="tab" onclick="switchTab('schedule')" id="tab-schedule">
       <span class="tab-icon">🗓️</span>Schedule
     </button>
   </nav>
@@ -582,7 +582,7 @@ tr:hover td { background: #faf8ff; }
         <textarea id="log-notes" placeholder="Sweet moments, things to practise at home, observations..."></textarea>
       </div>
 
-      <button class="bb-btn" id="btn-log">
+      <button class="bb-btn" id="btn-log" onclick="submitLog()">
         <div class="spinner"></div>
         <span class="btn-text">✉️ &nbsp;Send Class Log</span>
       </button>
@@ -691,7 +691,7 @@ tr:hover td { background: #faf8ff; }
         </div>
       </div>
 
-      <button class="bb-btn" id="btn-student">
+      <button class="bb-btn" id="btn-student" onclick="submitStudent()">
         <div class="spinner"></div>
         <span class="btn-text">🌟 &nbsp;Register New Student</span>
       </button>
@@ -728,7 +728,7 @@ tr:hover td { background: #faf8ff; }
         </div>
       </div>
 
-      <button class="bb-btn" id="btn-course">
+      <button class="bb-btn" id="btn-course" onclick="submitCourse()">
         <div class="spinner"></div>
         <span class="btn-text">📚 &nbsp;Add New Course</span>
       </button>
@@ -746,7 +746,7 @@ tr:hover td { background: #faf8ff; }
         <div class="section-title">Dashboard 📊</div>
         <div class="last-refresh" id="last-refresh">Not yet loaded</div>
       </div>
-      <button class="bb-btn secondary" style="width:auto;padding:9px 18px" id="btn-refresh">
+      <button class="bb-btn secondary" style="width:auto;padding:9px 18px" id="btn-refresh" onclick="loadDashboard()">
         <div class="spinner"></div>
         <span class="btn-text">🔄 Refresh</span>
       </button>
@@ -822,7 +822,7 @@ tr:hover td { background: #faf8ff; }
         <label>Notes</label>
         <textarea id="sch-notes" placeholder="Any notes about this session..." style="min-height:60px"></textarea>
       </div>
-      <button class="bb-btn" id="btn-schedule">
+      <button class="bb-btn" id="btn-schedule" onclick="submitSchedule()">
         <div class="spinner"></div>
         <span class="btn-text">🗓️ &nbsp;Add to Schedule</span>
       </button>
@@ -845,9 +845,9 @@ tr:hover td { background: #faf8ff; }
 
     <div class="bb-card">
       <div class="cal-nav">
-        <button class="cal-nav-btn" id="btn-cal-prev">◀</button>
+        <button class="cal-nav-btn" id="btn-cal-prev" onclick="calPrev()">◀</button>
         <div class="cal-month-label" id="cal-month-label">—</div>
-        <button class="cal-nav-btn" id="btn-cal-next">▶</button>
+        <button class="cal-nav-btn" id="btn-cal-next" onclick="calNext()">▶</button>
       </div>
       <div class="cal-grid" id="cal-dow-row">
         <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div>
@@ -1360,60 +1360,8 @@ async function renderCalendar() {
   body.innerHTML = cells;
 }
 
-/* ══════════════════════════════
-   EVENT LISTENERS
-   Script is at bottom of body — DOM is already ready.
-   No DOMContentLoaded wrapper needed.
-══════════════════════════════ */
-
-/* ── Tab buttons — keyed by data-tab attribute ── */
-document.querySelectorAll('.tab-btn[data-tab]').forEach(function (btn) {
-  btn.addEventListener('click', function () {
-    switchTab(btn.getAttribute('data-tab'));
-  });
-});
-
-/* ── Form submit buttons ── */
-var btnLog = document.getElementById('btn-log');
-if (btnLog) btnLog.addEventListener('click', submitLog);
-
-var btnStudent = document.getElementById('btn-student');
-if (btnStudent) btnStudent.addEventListener('click', submitStudent);
-
-var btnCourse = document.getElementById('btn-course');
-if (btnCourse) btnCourse.addEventListener('click', submitCourse);
-
-var btnRefresh = document.getElementById('btn-refresh');
-if (btnRefresh) btnRefresh.addEventListener('click', loadDashboard);
-
-var btnSchedule = document.getElementById('btn-schedule');
-if (btnSchedule) btnSchedule.addEventListener('click', submitSchedule);
-
-/* ── Calendar nav ── */
-var btnPrev = document.getElementById('btn-cal-prev');
-if (btnPrev) btnPrev.addEventListener('click', calPrev);
-
-var btnNext = document.getElementById('btn-cal-next');
-if (btnNext) btnNext.addEventListener('click', calNext);
-
-/* ── Keyboard shortcut: Cmd/Ctrl+Enter submits active form ── */
-document.addEventListener('keydown', function (e) {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-    var active = document.querySelector('.tab-panel.active');
-    if (!active) return;
-    var panelId = active.id;
-    if      (panelId === 'panel-log')      submitLog();
-    else if (panelId === 'panel-student')  submitStudent();
-    else if (panelId === 'panel-course')   submitCourse();
-    else if (panelId === 'panel-schedule') submitSchedule();
-  }
-});
-
 /* ── Init calendar label ── */
-var calLabel = document.getElementById('cal-month-label');
-if (calLabel) calLabel.textContent = MONTHS[calMonth] + ' ' + calYear;
-
-console.log('Baby Berry event listeners attached — tabs:', document.querySelectorAll('.tab-btn[data-tab]').length);
+document.getElementById('cal-month-label').textContent = MONTHS[calMonth] + ' ' + calYear;
 
 </body>
 </html>
