@@ -868,6 +868,7 @@ tr:hover td { background: #faf8ff; }
 <div class="app-footer">🍓 Baby Berry Enhancement School &nbsp;·&nbsp; โรงเรียนเสริมทักษะเบบี้เบอร์รี่</div>
 
 <script>
+console.log('Baby Berry app loaded');
 const API_URL  = 'https://script.google.com/macros/s/AKfycbzCOhCw4wpGs2HswUeGcm6i-QCiXH_AhcY60kP2-5KKYXZSUkwEOVaVL_mgX2CJGpeS/exec';
 const API_KEY  = 'BabyBerry2026TK';
 const TODAY    = new Date().toISOString().split('T')[0];
@@ -1360,59 +1361,59 @@ async function renderCalendar() {
 }
 
 /* ══════════════════════════════
-   EVENT LISTENERS — no onclick attributes
-   Works inside Google Sites iframe sandbox
+   EVENT LISTENERS
+   Script is at bottom of body — DOM is already ready.
+   No DOMContentLoaded wrapper needed.
 ══════════════════════════════ */
-document.addEventListener('DOMContentLoaded', function () {
 
-  /* ── Tab buttons — use data-tab attribute ── */
-  document.querySelectorAll('.tab-btn[data-tab]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      switchTab(btn.getAttribute('data-tab'));
-    });
+/* ── Tab buttons — keyed by data-tab attribute ── */
+document.querySelectorAll('.tab-btn[data-tab]').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    switchTab(btn.getAttribute('data-tab'));
   });
-
-  /* ── Form submit buttons ── */
-  var btnLog = document.getElementById('btn-log');
-  if (btnLog) btnLog.addEventListener('click', submitLog);
-
-  var btnStudent = document.getElementById('btn-student');
-  if (btnStudent) btnStudent.addEventListener('click', submitStudent);
-
-  var btnCourse = document.getElementById('btn-course');
-  if (btnCourse) btnCourse.addEventListener('click', submitCourse);
-
-  var btnRefresh = document.getElementById('btn-refresh');
-  if (btnRefresh) btnRefresh.addEventListener('click', loadDashboard);
-
-  var btnSchedule = document.getElementById('btn-schedule');
-  if (btnSchedule) btnSchedule.addEventListener('click', submitSchedule);
-
-  /* ── Calendar nav ── */
-  var btnPrev = document.getElementById('btn-cal-prev');
-  if (btnPrev) btnPrev.addEventListener('click', calPrev);
-
-  var btnNext = document.getElementById('btn-cal-next');
-  if (btnNext) btnNext.addEventListener('click', calNext);
-
-  /* ── Keyboard shortcut: Cmd/Ctrl+Enter submits active form ── */
-  document.addEventListener('keydown', function (e) {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      var active = document.querySelector('.tab-panel.active');
-      if (!active) return;
-      var id = active.id;
-      if (id === 'panel-log')      submitLog();
-      else if (id === 'panel-student') submitStudent();
-      else if (id === 'panel-course')  submitCourse();
-      else if (id === 'panel-schedule') submitSchedule();
-    }
-  });
-
-  /* ── Init calendar label ── */
-  var calLabel = document.getElementById('cal-month-label');
-  if (calLabel) calLabel.textContent = MONTHS[calMonth] + ' ' + calYear;
-
 });
+
+/* ── Form submit buttons ── */
+var btnLog = document.getElementById('btn-log');
+if (btnLog) btnLog.addEventListener('click', submitLog);
+
+var btnStudent = document.getElementById('btn-student');
+if (btnStudent) btnStudent.addEventListener('click', submitStudent);
+
+var btnCourse = document.getElementById('btn-course');
+if (btnCourse) btnCourse.addEventListener('click', submitCourse);
+
+var btnRefresh = document.getElementById('btn-refresh');
+if (btnRefresh) btnRefresh.addEventListener('click', loadDashboard);
+
+var btnSchedule = document.getElementById('btn-schedule');
+if (btnSchedule) btnSchedule.addEventListener('click', submitSchedule);
+
+/* ── Calendar nav ── */
+var btnPrev = document.getElementById('btn-cal-prev');
+if (btnPrev) btnPrev.addEventListener('click', calPrev);
+
+var btnNext = document.getElementById('btn-cal-next');
+if (btnNext) btnNext.addEventListener('click', calNext);
+
+/* ── Keyboard shortcut: Cmd/Ctrl+Enter submits active form ── */
+document.addEventListener('keydown', function (e) {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    var active = document.querySelector('.tab-panel.active');
+    if (!active) return;
+    var panelId = active.id;
+    if      (panelId === 'panel-log')      submitLog();
+    else if (panelId === 'panel-student')  submitStudent();
+    else if (panelId === 'panel-course')   submitCourse();
+    else if (panelId === 'panel-schedule') submitSchedule();
+  }
+});
+
+/* ── Init calendar label ── */
+var calLabel = document.getElementById('cal-month-label');
+if (calLabel) calLabel.textContent = MONTHS[calMonth] + ' ' + calYear;
+
+console.log('Baby Berry event listeners attached — tabs:', document.querySelectorAll('.tab-btn[data-tab]').length);
 
 </body>
 </html>
